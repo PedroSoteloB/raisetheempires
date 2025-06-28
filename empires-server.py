@@ -2751,6 +2751,10 @@ def server_error_page(error):
 
 
 if __name__ == '__main__':
+    host = "0.0.0.0"
+    port = int(os.environ.get("PORT", 5000))
+    debug = False
+
     if 'WERKZEUG_RUN_MAIN' not in os.environ and open_browser:
         if os.path.exists(os.path.join("chromium", "chrome.exe")):
             threading.Timer(1.25, lambda: os.system(os.path.join("chromium", "chrome.exe") + " --user-data-dir=\"" + os.path.join(my_games_path(), "chromium-profile") + "\"" + " --allow-outdated-plugins " + ("--app=" if app_mode else "") + "http://" + http_host + ":" + str(port) + "/" + http_path)).start()
@@ -2758,18 +2762,16 @@ if __name__ == '__main__':
             threading.Timer(1.25, lambda: os.system(os.path.join("chromium", "chrome") + " --user-data-dir=\"" + os.path.join(my_games_path(), "chromium-profile") + "\"" + " --–allow-outdated-plugins " + ("--app=" if app_mode else "") + "http://" + http_host + ":" + str(port) + "/" + http_path)).start()
         else:
             threading.Timer(1.25, lambda: webbrowser.open("http://" + http_host + ":" + str(port) + "/" + http_path)).start()
-    # init_db(app, db)
+
     set_crash_log(crash_log)
     if compression:
         compress.init_app(app)
     socketio.init_app(app)
     sess.init_app(app)
     db.init_app(app)
-    # session.app.session_interface.db.create_all()
-    # app.session_interface.db.create_all()
-    # db.create_all()
 
     socketio.run(app, host=host, port=port, debug=debug)
+
     # app.run(host='127.0.0.1', port=5005, debug=True)
     # logging.getLogger('socketio').setLevel(logging.ERROR)
     # logging.getLogger('engineio').setLevel(logging.ERROR)
